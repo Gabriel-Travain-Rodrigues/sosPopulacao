@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity} from 'react-native';
-import {Stack} from 'expo-router';
+
 
 
 export default function Index() {
