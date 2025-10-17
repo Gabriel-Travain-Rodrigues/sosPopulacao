@@ -1,10 +1,10 @@
-import {Tabs} from "expo-router";
+import { Drawer } from 'expo-router/drawer';
 
 export default function Layout() {
-    return (
-        <Tabs>
-            <Tabs.Screen name="index" options={{headerShown: false, title: 'Home'}} />
-            <Tabs.Screen name="profile" options={{headerShown: false, title: 'Perfil'}} />
-        </Tabs>
-    );
+  return (  
+<Drawer>
+    <Drawer.Screen name="index" options={{headerShown: false, title: 'Home'}}/>
+      <Drawer.Screen name="profile" options={{headerShown: false, title: 'Perfil'}}/>
+</Drawer>
+)
 }
