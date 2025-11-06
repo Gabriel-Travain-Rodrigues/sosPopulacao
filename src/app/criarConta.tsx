@@ -36,15 +36,12 @@ export default function SignUp() {
   return (
     <ScrollView contentContainerStyle={styles.scroll}>
       <View style={styles.container}>
-        
-     
+        {/* Botão VOLTAR fixo no canto inferior esquerdo */}
         <TouchableOpacity style={styles.backButton} onPress={back}>
           <Text style={styles.backText}>VOLTAR</Text>
         </TouchableOpacity>
 
- 
         <Text style={styles.title}>PERFIL</Text>
-
 
         <TextInput
           style={[styles.input, styles.inputBlack]}
@@ -175,14 +172,20 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   backButton: {
-    alignSelf: "flex-start",
+    position: "absolute",
+    bottom: 30,
+    left: 20,
     backgroundColor: "#fff",
-    paddingVertical: 6,
-    paddingHorizontal: 15,
+    paddingVertical: 8,
+    paddingHorizontal: 18,
     borderRadius: 20,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: "#000",
-    marginBottom: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 3,
+    elevation: 4,
   },
   backText: {
     fontSize: 12,

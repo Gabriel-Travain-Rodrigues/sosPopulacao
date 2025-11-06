@@ -1,10 +1,28 @@
 import { View, Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { ButtonInitial } from "../Components/ButtonInitial";
+import { useNavigation } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Index() {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
-      {/* Logo dentro do círculo branco */}
+
+      <TouchableOpacity
+        style={styles.menuButton}
+        onPress={() => navigation.openDrawer()}
+      >
+        <Ionicons name="menu" size={32} color="#fff" />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.profileButton}
+        onPress={() => navigation.navigate("profile")}
+      >
+        <Ionicons name="person-circle-outline" size={38} color="#fff" />
+      </TouchableOpacity>
+
       <View style={styles.logoContainer}>
         <Image
           source={require("../../assets/images/Logo.png")}
@@ -12,20 +30,11 @@ export default function Index() {
         />
       </View>
 
-      {/* Bloco branco com os botões */}
       <View style={styles.whiteBox}>
         <Text style={styles.title}>SELECIONE O SERVIÇO QUE DESEJA UTILIZAR</Text>
 
-        {/* Botão principal */}
-        <View style={styles.mainButtonContainer}>
-          <ButtonInitial
-            label="Polícia"
-            iconSource={require("../../assets/images/Policia.png")}
-            onPress={() => alert("Botão Polícia pressionado!")}
-          />
-        </View>
+ 
 
-        {/* Linhas de botões */}
         <View style={styles.row}>
           <ButtonInitial
             label="Bombeiros"
@@ -45,16 +54,18 @@ export default function Index() {
             iconSource={require("../../assets/images/PoliciaAmbiental.png")}
             onPress={() => alert("Botão Polícia Ambiental pressionado!")}
           />
-          <ButtonInitial
-            label="Comunidade"
-            iconSource={require("../../assets/images/Comunidade.png")}
-            onPress={() => alert("Botão Comunidade pressionado!")}
+         <ButtonInitial
+            label="Polícia"
+            iconSource={require("../../assets/images/Policia.png")}
+            onPress={() => alert("Botão Polícia pressionado!")}
           />
         </View>
       </View>
 
-      {/* Botão Alerta */}
-      <TouchableOpacity style={styles.alertButton} onPress={() => alert("Alerta pressionado!")}>
+      <TouchableOpacity
+        style={styles.alertButton}
+        onPress={() => alert("Alerta pressionado!")}
+      >
         <Text style={styles.alertButtonText}>ALERTA</Text>
       </TouchableOpacity>
     </View>
@@ -68,6 +79,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     paddingTop: 40,
+  },
+
+  menuButton: {
+    position: "absolute",
+    top: 50,
+    left: 25,
+    zIndex: 10,
+  },
+
+  profileButton: {
+    position: "absolute",
+    top: 45,
+    right: 25,
+    zIndex: 10,
   },
 
   logoContainer: {
