@@ -7,8 +7,12 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  ScrollView,
+  ScrollView
 } from "react-native";
+import { useUser } from "../context/userContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect } from "react";
+
 
 export default function SignUp() {
   const [nome, setNome] = useState("");
@@ -16,7 +20,24 @@ export default function SignUp() {
   const [endereco, setEndereco] = useState("");
   const [telefone, setTelefone] = useState("");
   const [numeroAdicional, setNumeroAdicional] = useState("");
-  const [contatoEmergencia, setContatoEmergencia] = useState("");
+  const { contatoEmergencia, setContatoEmergencia } = useUser();
+
+
+  useEffect(() => {
+    async function salvarContato() {
+      if (contatoEmergencia) {
+        try {
+          await AsyncStorage.setItem("contatoEmergencia", contatoEmergencia);
+          console.log("Contato de emergência salvo:", contatoEmergencia);
+        } catch (err) {
+          console.error("Erro ao salvar contato:", err);
+        }
+      }
+    }
+
+    salvarContato();
+  }, [contatoEmergencia]);
+
 
   function Cadastro() {
     if (!nome || !idade || !endereco || !telefone || !contatoEmergencia) {

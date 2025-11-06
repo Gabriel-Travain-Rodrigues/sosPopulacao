@@ -1,8 +1,14 @@
 import { Drawer } from "expo-router/drawer";
 import { Ionicons } from "@expo/vector-icons";
+import { UserProvider } from "../context/userContext";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+
 
 export default function Layout() {
   return (
+    <SafeAreaProvider>
+      <UserProvider>
     <Drawer
       screenOptions={{
         headerShown: false, // o header fica falso porque você já fez o topo customizado no index.js
@@ -33,5 +39,5 @@ export default function Layout() {
         }}
       />
     </Drawer>
-  );
-}
+    </UserProvider>
+    </SafeAreaProvider>
