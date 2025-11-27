@@ -1,13 +1,24 @@
-import { View, Image, StyleSheet, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Image, StyleSheet, Text, TouchableOpacity, Alert, TextInput } from "react-native";
 import { ButtonInitial } from "../Components/ButtonInitial";
 import * as Linking from 'expo-linking';
 import * as Location from "expo-location";
 import { useUser } from "../context/userContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+
+import { useNavigation, NavigationProp, DrawerActions } from "@react-navigation/native";
+
+type RootStackParamList = {
+  profile: undefined;
+  // Add other routes here if needed
+};
+
+
 
 export default function Index() {
   const [contatoEmergencia, setContatoEmergencia] = useState("");
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
  useEffect(() => {
     async function carregarContato() {
@@ -30,6 +41,10 @@ export default function Index() {
         Alert.alert("Permissão negada", "Não foi possível acessar a localização.");
         return;
       }
+      if(contatoEmergencia.length === 0){
+        Alert.alert("Erro", "Nenhum contato de emergência cadastrado!");
+        return;
+      }
 
       // 2️⃣ Obter coordenadas atuais
       const location = await Location.getCurrentPositionAsync({});
@@ -39,7 +54,7 @@ export default function Index() {
       const message = `⚠️ ALERTA! Preciso de ajuda. Minha localização é:\nhttps://www.google.com/maps?q=${latitude},${longitude}`;
 
       // 4️⃣ Abrir o WhatsApp com a mensagem
-      const url = `https://wa.me/55${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
       await Linking.openURL(url);
 
     } catch (error) {
@@ -52,7 +67,7 @@ export default function Index() {
 
       <TouchableOpacity
         style={styles.menuButton}
-        onPress={() => navigation.openDrawer()}
+        onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
       >
         <Ionicons name="menu" size={32} color="#fff" />
       </TouchableOpacity>
@@ -69,9 +84,12 @@ export default function Index() {
           source={require("../../assets/images/Logo.png")}
           style={styles.image}
         />
+        
       </View>
+      
 
       <View style={styles.whiteBox}>
+      
         <Text style={styles.title}>SELECIONE O SERVIÇO QUE DESEJA UTILIZAR</Text>
 
         {/* Botão principal */}
@@ -145,6 +163,23 @@ const styles = StyleSheet.create({
     left: 25,
     zIndex: 10,
   },
+  input: {
+    width: "90%",
+    height: 50,
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    marginBottom: 12,
+
+  },
+  inputBlack: {
+    backgroundColor: "#000",
+    color: "#fff",
+  },
+  inputGray: {
+    backgroundColor: "#E6E6E6",
+    color: "#000",
+  },
 
   profileButton: {
     position: "absolute",
@@ -154,13 +189,14 @@ const styles = StyleSheet.create({
   },
 
   logoContainer: {
-    width: 120,
-    height: 120,
+    width: 80,
+    height: 80,
     borderRadius: 60,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 20,
+    display: "flex",
+    marginBottom: 10,
   },
 
   image: {
@@ -205,7 +241,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 60,
     position: "absolute",
-    bottom: 40,
+    bottom: 80,
     shadowColor: "#000",
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 3 },

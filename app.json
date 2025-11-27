@@ -16,13 +16,15 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Precisamos da sua localização para enviar as coordenadas no alerta do WhatsApp."}
+        "NSLocationWhenInUseUsageDescription": "Precisamos da sua localização para enviar as coordenadas no alerta do WhatsApp."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },"permissions": [
+      },
+      "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
       ],
@@ -36,10 +38,10 @@
     },
     "plugins": [
       "expo-router"
+      
     ],
     "experiments": {
       "typedRoutes": true
-    },
-    
+    }
   }
 }
