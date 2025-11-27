@@ -28,7 +28,7 @@ type RootStackParamList = {
 
 export default function Index() {
   const router = useRouter();
-  const navigation = useNavigation(); // <<< CORRETO PARA O DRAWER
+  const navigation = useNavigation(); 
 
   const [contatoEmergencia, setContatoEmergencia] = useState("");
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
