@@ -27,6 +27,9 @@ type RootStackParamList = {
 };
 
 export default function Index() {
+  const router = useRouter();
+  const navigation = useNavigation(); // <<< CORRETO PARA O DRAWER
+
   const [contatoEmergencia, setContatoEmergencia] = useState("");
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -62,6 +65,9 @@ export default function Index() {
       const { latitude, longitude } = location.coords;
 
       const message = `⚠️ ALERTA! Preciso de ajuda. Minha localização é:\nhttps://www.google.com/maps?q=${latitude},${longitude}`;
+      const url = `https://wa.me/55${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+        message
+      )}`;
 
       
       const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
@@ -76,6 +82,7 @@ export default function Index() {
       console.error(error);
     }
   }
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -85,9 +92,10 @@ export default function Index() {
         <Ionicons name="menu" size={32} color="#fff" />
       </TouchableOpacity>
 
+      {/* BOTÃO PERFIL */}
       <TouchableOpacity
         style={styles.profileButton}
-        onPress={() => navigation.navigate("profile")}
+        onPress={() => router.push("/profile")}
       >
         <Ionicons name="person-circle-outline" size={38} color="#fff" />
       </TouchableOpacity>
@@ -127,6 +135,7 @@ export default function Index() {
                 .catch((err) => console.error("Failed to open URL:", err));
             }}
           />
+
           <ButtonInitial
             label="SAMU"
             iconSource={require("../../assets/images/Samu.png")}
@@ -152,7 +161,6 @@ export default function Index() {
         </View>
       </View>
 
-
       <TouchableOpacity style={styles.alertButton} onPress={handleAlertPress}>
         <Text style={styles.alertButtonText}>ALERTA</Text>
       </TouchableOpacity>
@@ -160,6 +168,7 @@ export default function Index() {
   );
 }
 
+/* estilos */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
