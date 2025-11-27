@@ -27,8 +27,7 @@ type RootStackParamList = {
 };
 
 export default function Index() {
-  const router = useRouter();
-  const navigation = useNavigation(); 
+  // Removed duplicate declaration of navigation
 
   const [contatoEmergencia, setContatoEmergencia] = useState("");
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -69,10 +68,6 @@ export default function Index() {
         message
       )}`;
 
-      
-      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-        message
-      )}`;
       if (!location) {
          return console.log("Location is undefined");
         }
@@ -95,7 +90,7 @@ export default function Index() {
       {/* BOTÃO PERFIL */}
       <TouchableOpacity
         style={styles.profileButton}
-        onPress={() => router.push("/profile")}
+        onPress={() => navigation.navigate("profile")}
       >
         <Ionicons name="person-circle-outline" size={38} color="#fff" />
       </TouchableOpacity>
