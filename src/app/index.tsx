@@ -1,26 +1,36 @@
-import { View, Image, StyleSheet, Text, TouchableOpacity, Alert, TextInput } from "react-native";
+import {
+  View,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Alert,
+  TextInput,
+} from "react-native";
 import { ButtonInitial } from "../Components/ButtonInitial";
-import * as Linking from 'expo-linking';
-import * as Location from "expo-location";
+import * as Linking from "expo-linking";
+import * as Location from 'expo-location';
 import { useUser } from "../context/userContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
-import { useNavigation, NavigationProp, DrawerActions } from "@react-navigation/native";
+import {
+  useNavigation,
+  NavigationProp,
+  DrawerActions,
+} from "@react-navigation/native";
 
 type RootStackParamList = {
   profile: undefined;
-  // Add other routes here if needed
+
 };
-
-
 
 export default function Index() {
   const [contatoEmergencia, setContatoEmergencia] = useState("");
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
- useEffect(() => {
+  useEffect(() => {
     async function carregarContato() {
       const value = await AsyncStorage.getItem("contatoEmergencia");
       if (value) setContatoEmergencia(value);
@@ -29,34 +39,38 @@ export default function Index() {
     carregarContato();
   }, []);
 
-
-
-  const WHATSAPP_NUMBER = contatoEmergencia.replace(/\D/g, '') // Remove non-digit characters
+  const WHATSAPP_NUMBER = contatoEmergencia.replace(/\D/g, ""); 
 
   async function handleAlertPress() {
     try {
-      // 1️⃣ Pedir permissão para acessar a localização
-      const { status } = await Location.requestForegroundPermissionsAsync();
+
+      let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        Alert.alert("Permissão negada", "Não foi possível acessar a localização.");
+        Alert.alert(
+          "Permissão negada",
+          "Não foi possível acessar a localização."
+        );
         return;
       }
-      if(contatoEmergencia.length === 0){
+      if (contatoEmergencia.length === 0) {
         Alert.alert("Erro", "Nenhum contato de emergência cadastrado!");
         return;
       }
 
-      // 2️⃣ Obter coordenadas atuais
-      const location = await Location.getCurrentPositionAsync({});
+  
+      let location = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
 
-      // 3️⃣ Criar mensagem
       const message = `⚠️ ALERTA! Preciso de ajuda. Minha localização é:\nhttps://www.google.com/maps?q=${latitude},${longitude}`;
 
-      // 4️⃣ Abrir o WhatsApp com a mensagem
-      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+        message
+      )}`;
+      if (!location) {
+         return console.log("Location is undefined");
+        }
       await Linking.openURL(url);
-
     } catch (error) {
       Alert.alert("Erro", "Ocorreu um problema ao enviar o alerta.");
       console.error(error);
@@ -64,7 +78,6 @@ export default function Index() {
   }
   return (
     <View style={styles.container}>
-
       <TouchableOpacity
         style={styles.menuButton}
         onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
@@ -84,21 +97,20 @@ export default function Index() {
           source={require("../../assets/images/Logo.png")}
           style={styles.image}
         />
-        
       </View>
-      
 
       <View style={styles.whiteBox}>
-      
-        <Text style={styles.title}>SELECIONE O SERVIÇO QUE DESEJA UTILIZAR</Text>
+        <Text style={styles.title}>
+          SELECIONE O SERVIÇO QUE DESEJA UTILIZAR
+        </Text>
 
-        {/* Botão principal */}
+  
         <View style={styles.mainButtonContainer}>
           <ButtonInitial
             label="Polícia"
             iconSource={require("../../assets/images/Policia.png")}
             onPress={() => {
-              Linking.openURL('tel:190')
+              Linking.openURL("tel:190")
                 .then(() => alert("Ligando para a Polícia..."))
                 .catch((err) => console.error("Failed to open URL:", err));
             }}
@@ -109,7 +121,7 @@ export default function Index() {
           <ButtonInitial
             label="Bombeiros"
             iconSource={require("../../assets/images/Bombeiros.png")}
-            onPress={() =>{ 
+            onPress={() => {
               Linking.openURL(`tel:190`)
                 .then(() => alert("Ligando para os Bombeiros..."))
                 .catch((err) => console.error("Failed to open URL:", err));
@@ -118,7 +130,7 @@ export default function Index() {
           <ButtonInitial
             label="SAMU"
             iconSource={require("../../assets/images/Samu.png")}
-            onPress={() => { 
+            onPress={() => {
               Linking.openURL(`tel:192`)
                 .then(() => alert("Ligando para o SAMU..."))
                 .catch((err) => console.error("Failed to open URL:", err));
@@ -132,7 +144,7 @@ export default function Index() {
             iconSource={require("../../assets/images/PoliciaAmbiental.png")}
             onPress={() => alert("Botão Polícia Ambiental pressionado!")}
           />
-         <ButtonInitial
+          <ButtonInitial
             label="Polícia"
             iconSource={require("../../assets/images/Policia.png")}
             onPress={() => alert("Botão Polícia pressionado!")}
@@ -140,7 +152,7 @@ export default function Index() {
         </View>
       </View>
 
-      {/* Botão Alerta */}
+
       <TouchableOpacity style={styles.alertButton} onPress={handleAlertPress}>
         <Text style={styles.alertButtonText}>ALERTA</Text>
       </TouchableOpacity>
@@ -170,7 +182,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 16,
     marginBottom: 12,
-
   },
   inputBlack: {
     backgroundColor: "#000",
