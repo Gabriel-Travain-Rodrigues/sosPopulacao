@@ -1,28 +1,35 @@
-import React from "react";
+import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
+  DrawerActions,
+  NavigationProp,
+  useNavigation,
+} from "@react-navigation/native";
+import { router } from "expo-router";
+import React, { useEffect } from "react";
+import {
   Alert,
   Platform,
+  StyleSheet,
+  Text,
   TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { router } from "expo-router";
-import Index from "./index";
-import * as Linking from "expo-linking";
 import { useUser } from "../context/userContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect } from "react";
-import {
-  useNavigation,
-  NavigationProp,
-  DrawerActions,
-} from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
+
+const COLORS = {
+  background: "#F9F9F9",
+  surface: "#FFFFFF",
+  textPrimary: "#1C1C1E",
+  textSecondary: "#8E8E93",
+  alert: "#FF3B30",
+  divider: "#E5E5EA",
+  shadow: "rgba(0, 0, 0, 0.08)",
+};
+
 type RootStackParamList = {
   profile: undefined;
-  // Add other routes here if needed
 };
 
 export default function Profile() {
@@ -44,7 +51,7 @@ export default function Profile() {
     salvarContato();
   }, [contatoEmergencia]);
 
-function Cadastro() {
+  function Cadastro() {
     if (!contatoEmergencia) {
       Alert.alert("Erro", "Preencha o campo de contato de emergência!");
       return;
@@ -59,23 +66,30 @@ function Cadastro() {
         style={styles.menuButton}
         onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
       >
-        <Ionicons name="menu" size={32} color="#fff" />
+        <Ionicons name="menu" size={30} color={COLORS.textPrimary} />
       </TouchableOpacity>
 
-      <Text style={styles.title}>SEU CONTATO DE EMERGÊNCIA:</Text>
+      <TouchableOpacity
+        style={styles.homeButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Ionicons name="home-outline"size={34} color={COLORS.textPrimary} />
+      </TouchableOpacity>
+      <Text style={styles.title}>CONTATO DE EMERGÊNCIA</Text>
+      <Text style={styles.subtitle}>
+        Este contato será usado no botão "ALERTA IMEDIATO".
+      </Text>
+
       <TextInput
-        style={[styles.input, styles.inputGray]}
-        placeholder={contatoEmergencia}
-        placeholderTextColor="#000"
+        style={styles.input}
+        placeholder={contatoEmergencia || "(00) 90000-0000"}
+        placeholderTextColor={COLORS.textSecondary}
         value={contatoEmergencia}
         onChangeText={setContatoEmergencia}
-        keyboardType="number-pad"
+        keyboardType="phone-pad"
       />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={Cadastro}
-        >
-        <Text style={styles.buttonText}>CONCLUIR</Text>
+      <TouchableOpacity style={styles.button} onPress={Cadastro}>
+        <Text style={styles.buttonText}>SALVAR E VOLTAR</Text>
       </TouchableOpacity>
     </View>
   );
@@ -84,94 +98,88 @@ function Cadastro() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#272047ff",
+    backgroundColor: COLORS.background,
     justifyContent: "center",
     alignItems: "center",
+    padding: 20,
+  },
+  homeButton: {
+    position: "absolute",
+    top: 50,
+    right: 20,
+    zIndex: 10,
   },
   menuButton: {
     position: "absolute",
     top: 50,
-    left: 25,
+    left: 20,
     zIndex: 10,
   },
-  button: {
-    width: "60%",
-    height: 50,
-    backgroundColor: "#fff",
-    borderRadius: 25,
-    borderWidth: 1.5,
-    borderColor: "#800080",
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 4,
-    shadowColor: "#800080",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#000",
-  },
+
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#ffffffff",
-    fontFamily: Platform.select({
-      android: "Inter_900Black",
-      ios: "Inter-Black",
-    }),
-    display: "flex",
-    paddingBottom: 20,
+    fontSize: 22,
+    fontWeight: "800",
+    color: COLORS.textPrimary,
+    marginBottom: 8,
+    letterSpacing: 0.5,
   },
-  inputBlack: {
-    backgroundColor: "#000",
-    color: "#fff",
+
+  subtitle: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    marginBottom: 40,
+    textAlign: "center",
+    paddingHorizontal: 20,
   },
+
   input: {
     width: "90%",
     height: 50,
-    borderRadius: 0,
-    paddingHorizontal: 10,
-    fontSize: 14,
-    marginBottom: 12,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    marginBottom: 30,
+    backgroundColor: COLORS.surface,
+    color: COLORS.textPrimary,
+    borderWidth: 1,
+    borderColor: COLORS.divider,
+
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.shadow,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
-  inputGray: {
-    backgroundColor: "#E6E6E6",
-    color: "#000",
-  },
-  emergencyBox: {
-    flex: 1,
-    alignItems: "center",
+
+  button: {
+    width: "70%",
+    height: 55,
+    backgroundColor: COLORS.alert,
+    borderRadius: 10,
     justifyContent: "center",
-    backgroundColor: "white",
-    height: "20%",
-    marginBottom: 20,
+    alignItems: "center",
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.alert,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.4,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
   },
-  emergencyText: {
-    fontSize: 14,
-    color: "#ffffffff",
-  },
-  backButton: {
-    position: "absolute",
-    bottom: 30,
-    left: 20,
-    backgroundColor: "#fff",
-    paddingVertical: 8,
-    paddingHorizontal: 18,
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderColor: "#000",
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 3,
-    elevation: 4,
-  },
-  backText: {
-    fontSize: 12,
-    fontWeight: "bold",
-    color: "#000",
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: COLORS.surface,
+    letterSpacing: 1,
   },
 });

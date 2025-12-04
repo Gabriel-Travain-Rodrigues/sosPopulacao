@@ -5,22 +5,43 @@ import {
   Image,
   StyleSheet,
   View,
+  
   ImageSourcePropType,
+  Platform,
 } from "react-native";
 
 type ButtonInitialProps = {
   label: string;
   iconSource: ImageSourcePropType;
   onPress: () => void;
+  shadowColor: string;
 };
 
 export const ButtonInitial = ({
   label,
   iconSource,
   onPress,
+  shadowColor,
 }: ButtonInitialProps) => {
+
+  const dynamicShadowStyle = Platform.select({
+    ios: {
+      shadowColor: shadowColor,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.7, 
+      shadowRadius: 8,
+    },
+    android: {
+      elevation: 6,
+       
+      borderColor: shadowColor, 
+      boxShadow:`5px 4px 10px ${shadowColor}33`,
+      
+    },
+  });
+
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity style={[styles.button, dynamicShadowStyle]} onPress={onPress}>
       <View style={styles.content}>
         <Image source={iconSource} style={styles.icon} resizeMode="contain" />
         <Text style={styles.text}>{label}</Text>
@@ -35,7 +56,6 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingVertical: 18,
     paddingHorizontal: 22,
-    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
@@ -49,7 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   icon: {
-    width: 60, // ícone maior
+    width: 110, // ícone maior
     height: 60,
     marginBottom: 8,
   },
