@@ -121,7 +121,7 @@ export default function Index() {
         onPress={() => navigation.navigate("profile")}
       >
         <Ionicons
-          name="person-circle-outline"
+          name="call-outline"
           size={34}
           color={COLORS.textPrimary}
         />

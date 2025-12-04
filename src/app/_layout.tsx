@@ -28,10 +28,10 @@ export default function Layout() {
           <Drawer.Screen
             name="profile"
             options={{
-              title: "Perfil",
+              title: "Contato de Emergência",
               drawerIcon: ({ color, size }) => (
                 <Ionicons
-                  name="person-circle-outline"
+                  name="call-outline"
                   size={size}
                   color={color}
                 />
